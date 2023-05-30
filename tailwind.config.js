@@ -5,6 +5,11 @@ export default {
     extend: {
       colors: {
         primary: "#7695EC",
+        secondary: "#DDDDDD",
+      },
+
+      fontFamily: {
+        roboto: ["Roboto", "sans-serif"],
       },
     },
   },
