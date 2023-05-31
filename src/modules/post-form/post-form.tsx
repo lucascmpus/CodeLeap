@@ -1,4 +1,5 @@
 import { useFormik } from "formik";
+import { useEffect } from "react";
 import { FormProps } from "types/form";
 
 export class Post {
@@ -11,15 +12,28 @@ export class Post {
   }
 }
 
-type PostProps = FormProps<Post>;
+interface PostProps extends FormProps<Post> {
+  reset?: any;
+}
 
 export function PostForm({ onSubmit, data, validationSchema }: PostProps) {
-  const { handleSubmit, touched, errors, dirty, isValid, getFieldProps } =
-    useFormik({
-      initialValues: data || new Post(),
-      onSubmit,
-      validationSchema,
-    });
+  const {
+    handleSubmit,
+    touched,
+    errors,
+    dirty,
+    isValid,
+    getFieldProps,
+    resetForm,
+  } = useFormik({
+    initialValues: data || new Post(),
+    onSubmit,
+    validationSchema,
+  });
+
+  useEffect(() => {
+    resetForm();
+  }, [onSubmit]);
 
   return (
     <div className="p-4 border rounded-md flex flex-col w-full ">
@@ -41,6 +55,7 @@ export function PostForm({ onSubmit, data, validationSchema }: PostProps) {
           )}
         </div>
 
+        {/* TODO: Change to textarea */}
         <div className="flex flex-col mt-3">
           <label htmlFor="">Content</label>
           <input

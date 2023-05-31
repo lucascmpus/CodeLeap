@@ -1,17 +1,30 @@
 import { Header } from "components";
-import { PostForm } from "modules/post-form/post-form";
+import { Post, PostForm } from "modules/post-form/post-form";
 import { postSchema } from "types/schemas/post-schema";
 import toast from "react-hot-toast";
-import { useFormikContext } from "formik";
+import axios from "axios";
+import { useState } from "react";
+import { ListOfPosts } from "components/posts";
 
 export function Main() {
-  const { resetForm } = useFormikContext() ?? {};
-  function handleSubmitForm() {
-    console.log("");
+  const [sendForm, setSendForm] = useState<boolean>();
+
+  function handleSubmitForm(data: Post) {
+    // TODO: Get username using redux
+    const username = "luc";
     // TODO: Make this http request with promise
-    // TODO: Reset form after successful submission
-    toast.success("Post created successfully");
-    resetForm();
+    axios
+      .post("https://dev.codeleap.co.uk/careers/", {
+        username,
+        title: data.title,
+        content: data.content,
+      })
+      .then(res => {
+        console.log(res.data);
+        toast.success("Post created successfully");
+      })
+      .catch(e => toast.error(e))
+      .finally(() => setSendForm(!sendForm));
   }
 
   return (
@@ -19,9 +32,15 @@ export function Main() {
       <div className="max-w-[800px] w-full bg-white min-h-screen">
         <Header />
         <div className="p-4">
-          <PostForm validationSchema={postSchema} onSubmit={handleSubmitForm} />
+          <PostForm
+            validationSchema={postSchema}
+            onSubmit={handleSubmitForm}
+            reset={sendForm}
+          />
+        </div>
 
-          
+        <div className="p-4">
+          <ListOfPosts />
         </div>
       </div>
     </div>

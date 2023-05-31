@@ -14,7 +14,7 @@ export function Home() {
 
   return (
     <>
-      <div className="min-h-screen w-full bg-slate-400 flex justify-center items-center">
+      <div className="min-h-screen w-full bg-secondary flex justify-center items-center">
         <div className="bg-white rounded-md p-5 w-[500px]">
           <h1 className="font-bold text-xl">Welcome to CodeLeap network!</h1>
 
