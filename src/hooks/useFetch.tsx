@@ -14,8 +14,11 @@ export function useFetch<T>({ method, url, body, headers }: useFetchProps) {
   const [error, setError] = useState();
 
   function fetchData() {
-    axios[method](url, JSON.parse(headers), JSON.parse(body))
-      .then(res => setData(res.data))
+    axios[method](url, body, headers)
+      .then(res => {
+        setData(res.data.results);
+        console.log(res.data.results);
+      })
       .catch(err => setError(err))
       .finally(() => setIsLoading(false));
   }

@@ -39,7 +39,7 @@ export function Main() {
           />
         </div>
 
-        <div className="p-4">
+        <div className="px-4 pt-2 pb-4">
           <ListOfPosts />
         </div>
       </div>
