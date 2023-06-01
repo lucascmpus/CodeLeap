@@ -55,15 +55,15 @@ export function PostForm({ onSubmit, data, validationSchema }: PostProps) {
           )}
         </div>
 
-        {/* TODO: Change to textarea */}
         <div className="flex flex-col mt-3">
           <label htmlFor="">Content</label>
-          <input
-            className="border rounded-md p-1 pb-16 placeholder:text-sm text-sm"
-            type="text"
+          <textarea
+            className="border rounded-md p-1 pl-2 placeholder:text-sm text-sm resize-none"
             placeholder="Content here"
+            cols={30}
+            rows={5}
             {...getFieldProps("content")}
-          />
+          ></textarea>
           {errors.content && touched.content && (
             <p className="text-red-400">{errors.content}</p>
           )}
@@ -73,8 +73,8 @@ export function PostForm({ onSubmit, data, validationSchema }: PostProps) {
           <button
             type="submit"
             className={`${
-              !(isValid && dirty) && "bg-gray-200"
-            } bg-primary text-white px-7 rounded-md`}
+              !(isValid && dirty) ? "bg-gray-200 " : "bg-primary"
+            }  text-white px-8 py-1 rounded-md`}
             disabled={!isValid && !dirty}
           >
             Create

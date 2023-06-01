@@ -1,6 +1,6 @@
 import { useFetch } from "hooks/useFetch";
-import { Posts } from "./posts";
 import { PostsFetchData } from "types/data";
+import { Posts } from "./posts";
 
 export function ListOfPosts() {
   const { data, isLoading, error } = useFetch<PostsFetchData[]>({

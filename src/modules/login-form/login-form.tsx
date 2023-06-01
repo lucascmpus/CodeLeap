@@ -35,8 +35,8 @@ export function LoginForm({ onSubmit, data, validationSchema }: UserProps) {
         <button
           type="submit"
           className={`${
-            !(isValid && dirty) && "bg-gray-200"
-          } bg-primary text-white px-7 rounded-md`}
+            !(isValid && dirty) ? "bg-gray-200 " : "bg-primary "
+          }  text-white px-7 rounded-md`}
           disabled={!isValid && !dirty}
         >
           ENTER

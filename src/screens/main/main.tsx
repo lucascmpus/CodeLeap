@@ -20,7 +20,6 @@ export function Main() {
         content: data.content,
       })
       .then(res => {
-        console.log(res.data);
         toast.success("Post created successfully");
       })
       .catch(e => toast.error(e))
