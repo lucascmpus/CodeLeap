@@ -26,7 +26,7 @@ export function ModalDeletePost({ isOpen, onReqClose }: ModalDeleteProps) {
       onRequestClose={() => onReqClose(false)}
       style={customStyles}
     >
-      <div className=""></div>
+      <div className="">ok ok ok</div>
     </Modal>
   );
 }
