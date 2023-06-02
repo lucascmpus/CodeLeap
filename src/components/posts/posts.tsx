@@ -4,7 +4,7 @@ import trash from "assets/trash.svg";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useState } from "react";
-import { ModalEditPost } from "components/modal";
+import { ModalDeletePost, ModalEditPost } from "components/modal";
 
 export function Posts({
   content,
@@ -13,10 +13,12 @@ export function Posts({
   id,
   created_datetime,
 }: PostsFetchData) {
-  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isOpenEditModal, setIsOpenEditModal] = useState(false);
 
-  function handleOpenModal(id: number) {
-    setIsOpenModal(true);
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
+
+  function handleOpenModalEdit(id: number) {
+    setIsOpenEditModal(true);
   }
 
   function handleDeletePost(id: number) {
@@ -34,7 +36,7 @@ export function Posts({
 
   function changeDate(date: string) {
     const currentDate = new Date();
-    console.log(Math.abs(currentDate.getTime() - new Date(date).getTime()));
+    // console.log(Math.abs(currentDate.getTime() - new Date(date).getTime()));
     const result = Math.abs(currentDate.getTime() - new Date(date).getTime());
     return result;
   }
@@ -50,13 +52,13 @@ export function Posts({
               src={trash}
               alt="trash button"
               className="w-6 cursor-pointer"
-              onClick={() => handleDeletePost(id)}
+              onClick={() => setIsOpenDeleteModal(true)}
             />
             <img
               src={edit}
               alt="edit button"
               className="w-6 cursor-pointer"
-              onClick={() => handleOpenModal(id)}
+              onClick={() => handleOpenModalEdit(id)}
             />
           </div>
         </div>
@@ -67,7 +69,7 @@ export function Posts({
           <div className="flex justify-between">
             <h1 className="text-gray-500 text-sm font-bold">@{username}</h1>
             {/* TODO: comparing current time
-          ex: 20minutes ago
+          ex: 20minutes ago 
         */}
             <p className="text-gray-500 text-sm">
               {changeDate(created_datetime)}
@@ -79,8 +81,13 @@ export function Posts({
       </div>
 
       <ModalEditPost
-        isOpen={isOpenModal}
-        onReqClose={() => setIsOpenModal(false)}
+        isOpen={isOpenEditModal}
+        onReqClose={() => setIsOpenEditModal(false)}
+      />
+
+      <ModalDeletePost
+        isOpen={isOpenDeleteModal}
+        onReqClose={() => setIsOpenDeleteModal(false)}
       />
     </>
   );

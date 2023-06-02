@@ -1,16 +1,26 @@
 import { LoginForm, User } from "modules/login-form/login-form";
 import { useNavigate } from "react-router-dom";
 import { loginSchema } from "types/schemas";
-
-// TODO: Button deactive when username field is empty;
+import { useDispatch } from "react-redux";
+import { login } from "redux/actions/user";
+import { useEffect } from "react";
 
 export function Home() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const user = localStorage.getItem("user");
 
   function handleSubmit(data: User) {
-    // TODO: Set username field on store using redux
+    dispatch(login(data.username));
     navigate("/network");
   }
+
+  useEffect(() => {
+    if (user) {
+      dispatch(login(JSON.parse(user)));
+      navigate("/network");
+    }
+  }, [user]);
 
   return (
     <>

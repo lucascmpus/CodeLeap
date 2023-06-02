@@ -5,13 +5,19 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useState } from "react";
 import { ListOfPosts } from "components/posts";
+import { useSelector } from "react-redux";
+import { login, selectUser } from "redux/actions/user";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 export function Main() {
   const [sendForm, setSendForm] = useState<boolean>();
+  const navigate = useNavigate();
+  const username = useSelector(selectUser);
+  const dispatch = useDispatch();
 
   function handleSubmitForm(data: Post) {
-    // TODO: Get username using redux
-    const username = "luc";
     // TODO: Make this http request with promise
     axios
       .post("https://dev.codeleap.co.uk/careers/", {
@@ -23,8 +29,22 @@ export function Main() {
         toast.success("Post created successfully");
       })
       .catch(e => toast.error(e))
-      .finally(() => setSendForm(!sendForm));
+      .finally(async () => {
+        setSendForm(!sendForm);
+      });
   }
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+
+    if (user) {
+      dispatch(login(JSON.parse(user)));
+    }
+
+    if (!username) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className="flex min-h-screen items-center flex-col bg-secondary font-roboto">
