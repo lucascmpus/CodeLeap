@@ -1,37 +1,37 @@
-import { Header } from "components";
-import { Post, PostForm } from "modules/post-form/post-form";
-import { postSchema } from "types/schemas/post-schema";
-import toast from "react-hot-toast";
 import axios from "axios";
-import { useState } from "react";
-import { ListOfPosts } from "components/posts";
-import { useSelector } from "react-redux";
-import { login, selectUser } from "redux/actions/user";
+import toast from "react-hot-toast";
+import { ListOfPosts, Header } from "components";
+import { Post, PostForm } from "modules/post-form/post-form";
 import { useEffect } from "react";
+import { useMutation, useQuery } from "react-query";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { login, selectUser } from "redux/actions/user";
+import { postSchema } from "types/schemas/post-schema";
 
 export function Main() {
-  const [sendForm, setSendForm] = useState<boolean>();
   const navigate = useNavigate();
   const username = useSelector(selectUser);
   const dispatch = useDispatch();
 
-  function handleSubmitForm(data: Post) {
-    // TODO: Make this http request with promise
-    axios
-      .post("https://dev.codeleap.co.uk/careers/", {
+  const { refetch } = useQuery("posts", {});
+
+  const mutation = useMutation({
+    mutationFn: (data: Post) => {
+      return axios.post("https://dev.codeleap.co.uk/careers/", {
         username,
         title: data.title,
         content: data.content,
-      })
-      .then(res => {
-        toast.success("Post created successfully");
-      })
-      .catch(e => toast.error(e))
-      .finally(async () => {
-        setSendForm(!sendForm);
       });
+    },
+    onSuccess: () => {
+      toast.success("Post created successfully");
+      refetch();
+    },
+  });
+
+  function handleSubmitForm(data: Post) {
+    mutation.mutate(data);
   }
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export function Main() {
           <PostForm
             validationSchema={postSchema}
             onSubmit={handleSubmitForm}
-            reset={sendForm}
+            // reset={sendForm}
           />
         </div>
 

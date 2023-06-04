@@ -17,23 +17,6 @@ export function Posts({
 
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
 
-  function handleOpenModalEdit(id: number) {
-    setIsOpenEditModal(true);
-  }
-
-  function handleDeletePost(id: number) {
-    // TODO: review this headers
-    axios
-      .delete("https://dev.codeleap.co.uk/careers/" + id, {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Credentials": true,
-        },
-      })
-      .then(() => toast.success("Post deleted successfully"))
-      .catch(e => toast.error(e));
-  }
-
   function changeDate(date: string) {
     const currentDate = new Date();
     // console.log(Math.abs(currentDate.getTime() - new Date(date).getTime()));
@@ -58,7 +41,7 @@ export function Posts({
               src={edit}
               alt="edit button"
               className="w-6 cursor-pointer"
-              onClick={() => handleOpenModalEdit(id)}
+              onClick={() => setIsOpenEditModal(true)}
             />
           </div>
         </div>
@@ -83,11 +66,13 @@ export function Posts({
       <ModalEditPost
         isOpen={isOpenEditModal}
         onReqClose={() => setIsOpenEditModal(false)}
+        id={id}
       />
 
       <ModalDeletePost
         isOpen={isOpenDeleteModal}
         onReqClose={() => setIsOpenDeleteModal(false)}
+        id={id}
       />
     </>
   );

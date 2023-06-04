@@ -1,16 +1,23 @@
-import { useFetch } from "hooks/useFetch";
+import axios from "axios";
+import { useQuery } from "react-query";
 import { PostsFetchData } from "types/data";
 import { Posts } from "./posts";
 
 export function ListOfPosts() {
-  const { data, isLoading, error } = useFetch<PostsFetchData[]>({
-    method: "get",
-    url: "https://dev.codeleap.co.uk/careers/",
-  });
+  const { data, isLoading, refetch } = useQuery<PostsFetchData[]>(
+    "posts",
+    () => {
+      return axios
+        .get("https://dev.codeleap.co.uk/careers/")
+        .then(res => res.data.results);
+    },
+    { refetchInterval: 10000 },
+  );
 
-  if (isLoading) return <p>isloading..</p>;
+  if (isLoading) return <p className="text-center">Loading...</p>;
 
   return (
+    // <div className="">ok</div>
     <div className="flex flex-col gap-4">
       {data?.map(({ content, username, id, title, created_datetime }) => (
         <Posts

@@ -1,8 +1,12 @@
+import axios from "axios";
+import { toast } from "react-hot-toast";
 import Modal from "react-modal";
+import { useMutation } from "react-query";
 
 interface ModalEditPostProps {
   isOpen: boolean;
   onReqClose: (open: boolean) => void;
+  id: number;
 }
 
 const customStyles = {
@@ -20,7 +24,16 @@ const customStyles = {
   },
 };
 
-export function ModalEditPost({ isOpen, onReqClose }: ModalEditPostProps) {
+export function ModalEditPost({ isOpen, onReqClose, id }: ModalEditPostProps) {
+  const mutation = useMutation({
+    mutationFn: () => {
+      return axios.delete(`https://dev.codeleap.co.uk/careers/${id}`);
+    },
+    onSuccess: () => {
+      toast.success("Post updated successfully");
+    },
+  });
+
   return (
     <Modal
       isOpen={isOpen}
@@ -51,8 +64,11 @@ export function ModalEditPost({ isOpen, onReqClose }: ModalEditPostProps) {
           ></textarea>
         </div>
 
-        <div className="flex justify-end mt-2">
-          <button className="mr-3 px-8 py-1 border bg-white rounded-lg">
+        <div className="flex justify-end mt-2 font-bold">
+          <button
+            className="mr-3 px-8 py-1 border bg-white rounded-lg"
+            onClick={() => onReqClose(false)}
+          >
             Cancel
           </button>
           <button className="px-9 py-1 bg-success text-white rounded-lg">

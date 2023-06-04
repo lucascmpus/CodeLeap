@@ -1,8 +1,12 @@
+import axios from "axios";
+import { toast } from "react-hot-toast";
 import Modal from "react-modal";
+import { useMutation } from "react-query";
+
 const customStyles = {
   content: {
     width: "660px",
-    height: "334px",
+    height: "auto",
     top: "50%",
     left: "50%",
     right: "auto",
@@ -17,16 +21,42 @@ const customStyles = {
 interface ModalDeleteProps {
   isOpen: boolean;
   onReqClose: (open: boolean) => void;
+  id: number;
 }
 
-export function ModalDeletePost({ isOpen, onReqClose }: ModalDeleteProps) {
+export function ModalDeletePost({ isOpen, onReqClose, id }: ModalDeleteProps) {
+  const mutation = useMutation({
+    mutationFn: () => {
+      return axios.delete(`https://dev.codeleap.co.uk/careers/${id}`);
+    },
+    onSuccess: () => {
+      toast.success("Post deleted successfully");
+    },
+  });
+
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={() => onReqClose(false)}
       style={customStyles}
     >
-      <div className="">ok ok ok</div>
+      <div className="text-xl font-bold">
+        Are you sure you want to delete this item? {id}
+      </div>
+      <div className="text-end mt-6 font-bold">
+        <button
+          className="mr-3 px-8 py-1 border bg-white rounded-lg"
+          onClick={() => onReqClose(false)}
+        >
+          Cancel
+        </button>
+        <button
+          className="px-8 py-1 border bg-red-500 text-white rounded-lg"
+          onClick={() => mutation.mutate()}
+        >
+          Delete
+        </button>
+      </div>
     </Modal>
   );
 }

@@ -12,9 +12,7 @@ export class Post {
   }
 }
 
-interface PostProps extends FormProps<Post> {
-  reset?: any;
-}
+type PostProps = FormProps<Post>;
 
 export function PostForm({ onSubmit, data, validationSchema }: PostProps) {
   const {
