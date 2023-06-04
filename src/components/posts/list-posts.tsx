@@ -4,7 +4,7 @@ import { PostsFetchData } from "types/data";
 import { Posts } from "./posts";
 
 export function ListOfPosts() {
-  const { data, isLoading, refetch } = useQuery<PostsFetchData[]>(
+  const { data, isLoading } = useQuery<PostsFetchData[]>(
     "posts",
     () => {
       return axios
@@ -17,7 +17,6 @@ export function ListOfPosts() {
   if (isLoading) return <p className="text-center">Loading...</p>;
 
   return (
-    // <div className="">ok</div>
     <div className="flex flex-col gap-4">
       {data?.map(({ content, username, id, title, created_datetime }) => (
         <Posts

@@ -1,7 +1,9 @@
 import axios from "axios";
+import { EditPost, EditPostForm } from "modules/edit-post-form/edit-post-form";
 import { toast } from "react-hot-toast";
 import Modal from "react-modal";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
+import { postSchema } from "types/schemas/post-schema";
 
 interface ModalEditPostProps {
   isOpen: boolean;
@@ -12,7 +14,7 @@ interface ModalEditPostProps {
 const customStyles = {
   content: {
     width: "660px",
-    height: "334px",
+    minHeigth: "334px",
     top: "50%",
     left: "50%",
     right: "auto",
@@ -25,14 +27,29 @@ const customStyles = {
 };
 
 export function ModalEditPost({ isOpen, onReqClose, id }: ModalEditPostProps) {
+  const { refetch } = useQuery("posts", {});
+
   const mutation = useMutation({
-    mutationFn: () => {
-      return axios.delete(`https://dev.codeleap.co.uk/careers/${id}`);
+    mutationFn: (data: EditPost) => {
+      return axios.patch(`https://dev.codeleap.co.uk/careers/${id}/`, {
+        title: data.title,
+        content: data.content,
+      });
     },
     onSuccess: () => {
       toast.success("Post updated successfully");
+      onReqClose(false);
+      refetch();
+    },
+    onError: () => {
+      toast.error("Post delete was failed");
+      onReqClose(false);
     },
   });
+
+  function handleSubmitEditForm(data: EditPost) {
+    mutation.mutate(data);
+  }
 
   return (
     <Modal
@@ -40,42 +57,11 @@ export function ModalEditPost({ isOpen, onReqClose, id }: ModalEditPostProps) {
       onRequestClose={() => onReqClose(false)}
       style={customStyles}
     >
-      <div className="flex flex-col w-full gap-3">
-        <h1 className="text-xl font-bold tracking-wide">Edit Item</h1>
-
-        <div className="flex flex-col">
-          <label htmlFor="">Title</label>
-          <input
-            type="text"
-            className="border rounded-md pl-3 py-1 placeholder:text-sm text-sm"
-            placeholder="Hello World"
-          />
-        </div>
-
-        <div className="flex flex-col">
-          <label htmlFor="">Content</label>
-          <textarea
-            name=""
-            id=""
-            cols={30}
-            rows={5}
-            className="border rounded-md p-1 pl-2 placeholder:text-sm text-sm resize-none"
-            placeholder="Content Here"
-          ></textarea>
-        </div>
-
-        <div className="flex justify-end mt-2 font-bold">
-          <button
-            className="mr-3 px-8 py-1 border bg-white rounded-lg"
-            onClick={() => onReqClose(false)}
-          >
-            Cancel
-          </button>
-          <button className="px-9 py-1 bg-success text-white rounded-lg">
-            Save
-          </button>
-        </div>
-      </div>
+      <EditPostForm
+        onSubmit={handleSubmitEditForm}
+        onReqClose={onReqClose}
+        validationSchema={postSchema}
+      />
     </Modal>
   );
 }

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import Modal from "react-modal";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 
 const customStyles = {
   content: {
@@ -25,12 +25,20 @@ interface ModalDeleteProps {
 }
 
 export function ModalDeletePost({ isOpen, onReqClose, id }: ModalDeleteProps) {
+  const { refetch } = useQuery("posts", {});
+
   const mutation = useMutation({
     mutationFn: () => {
-      return axios.delete(`https://dev.codeleap.co.uk/careers/${id}`);
+      return axios.delete(`https://dev.codeleap.co.uk/careers/${id}/`);
     },
     onSuccess: () => {
       toast.success("Post deleted successfully");
+      onReqClose(false);
+      refetch();
+    },
+    onError: () => {
+      toast.error("Post delete was failed");
+      onReqClose(false);
     },
   });
 
@@ -41,7 +49,7 @@ export function ModalDeletePost({ isOpen, onReqClose, id }: ModalDeleteProps) {
       style={customStyles}
     >
       <div className="text-xl font-bold">
-        Are you sure you want to delete this item? {id}
+        Are you sure you want to delete this item?
       </div>
       <div className="text-end mt-6 font-bold">
         <button

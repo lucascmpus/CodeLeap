@@ -1,10 +1,8 @@
-import { PostsFetchData } from "types/data";
 import edit from "assets/bx-edit.svg";
 import trash from "assets/trash.svg";
-import axios from "axios";
-import { toast } from "react-hot-toast";
-import { useState } from "react";
 import { ModalDeletePost, ModalEditPost } from "components/modal";
+import { useState } from "react";
+import { PostsFetchData } from "types/data";
 
 export function Posts({
   content,
@@ -18,12 +16,24 @@ export function Posts({
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
 
   function changeDate(date: string) {
-    const currentDate = new Date();
-    // console.log(Math.abs(currentDate.getTime() - new Date(date).getTime()));
-    const result = Math.abs(currentDate.getTime() - new Date(date).getTime());
-    return result;
-  }
+    const result = Math.floor(
+      (new Date().getTime() - new Date(date).getTime()) / 60000,
+    );
+    if (result < 60) {
+      return result + " minutes ago...";
+    } else {
+      const diffHours = Math.floor(result / 60);
+      const remainingMinutes = result % 60;
 
+      if (diffHours === 1) {
+        return "1 hora atrás...";
+      } else if (remainingMinutes === 0) {
+        return diffHours + " horas atrás...";
+      } else {
+        return diffHours + " horas e " + remainingMinutes + " minutos atrás...";
+      }
+    }
+  }
   return (
     <>
       <div className="w-full rounded-lg border-b border-x">
@@ -51,9 +61,6 @@ export function Posts({
           {/* Username */}
           <div className="flex justify-between">
             <h1 className="text-gray-500 text-sm font-bold">@{username}</h1>
-            {/* TODO: comparing current time
-          ex: 20minutes ago 
-        */}
             <p className="text-gray-500 text-sm">
               {changeDate(created_datetime)}
             </p>
