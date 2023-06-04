@@ -1,8 +1,8 @@
 import axios from "axios";
-import toast from "react-hot-toast";
-import { ListOfPosts, Header } from "components";
+import { Header, ListOfPosts } from "components";
 import { Post, PostForm } from "modules/post-form/post-form";
 import { useEffect } from "react";
+import toast from "react-hot-toast";
 import { useMutation, useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -51,11 +51,7 @@ export function Main() {
       <div className="max-w-[800px] w-full bg-white min-h-screen">
         <Header />
         <div className="p-4">
-          <PostForm
-            validationSchema={postSchema}
-            onSubmit={handleSubmitForm}
-            // reset={sendForm}
-          />
+          <PostForm validationSchema={postSchema} onSubmit={handleSubmitForm} />
         </div>
 
         <div className="px-4 pt-2 pb-4">
